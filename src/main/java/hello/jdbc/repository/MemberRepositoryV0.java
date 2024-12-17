@@ -111,6 +111,26 @@ public class MemberRepositoryV0 {
         }
     }
 
+    public void delete(String memberId) throws SQLException {
+        String sql = "delete from member where member_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try{
+            con = getConnection();
+            pstmt = con.prepareStatement(sql); //sql 쿼리 날려주는 친구
+            pstmt.setString(1, memberId);
+            int resultSize = pstmt.executeUpdate(); //영향받은 row 수 반환
+            log.info("resultSize={}", resultSize);
+        } catch (SQLException e){
+            log.error("db error", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
     private static Connection getConnection() {
         return DBConnectionUtil.getConnection();
     }
